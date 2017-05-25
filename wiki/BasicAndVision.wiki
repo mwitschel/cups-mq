@@ -1,0 +1,8 @@
+
+
+= Objectives and Priority =
+
+  * (1) Provide active FTP backend and active FTP fronted
+  * (2) Provide passive FTP backend and passive FTP frontend
+  * (2) Provide pyftplib AbstractedFS Object to present cups queues in ways of a virtual filesystem
+  * Automatic links to other wiki pages

@@ -1,0 +1,32 @@
+#!/sbin/runscript
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+depend() {
+    # on day we shure will use logger
+    use logger
+    # we absolutely use cups, thats what we are here for
+    need cupsd
+    # we need net. makes no sense starting an ftp daemon without net
+    need net
+    # what do we provide
+    provide cupsmq-ftp
+}
+
+start() {
+    ebegin "Starting cupsMQ FTP daemon"
+    start-stop-daemon --start --exec $CUPSMQFTPD_BIN --background --make-pidfile $CUPSMQFTPD_PIDFILE --name cupsmq-ftpd -- $CUPSMQFTPD_CONFIG
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping cupsMQ FTP daemon"
+    start-stop-daemon --stop --exec $CUPSMQFTPD_BIN --pidfile $CUPSMQFTPD_PIDFILE
+    eend $?
+}
+
+restart() {
+    stop
+    start
+}

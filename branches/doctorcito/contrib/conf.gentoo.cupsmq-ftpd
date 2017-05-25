@@ -1,0 +1,11 @@
+# Gentoo conf.d config file for cupsmq-ftpd runscript
+# place in /etc/conf.d
+
+# path to executable
+CUPSMQFTPD_BIN="/usr/local/sbin/cupsmq-ftpd.py"
+
+# path to pid file
+CUPSMQFTPD_PID="/var/run/cupsmq-ftpd.pid"
+
+# path to cupsmq configuration file
+CUPSMQFTPD_CONFIG="/etc/cupsmq/cupsmq.conf"

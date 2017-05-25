@@ -1,0 +1,17 @@
+THIS BY NOW IS TO BE CONSIDERED DEMONSTRATION CODE QUALITY!
+
+You need a workin installation of cups (Common Unix Printing System)
+and python (2.7) to use any of the code provided here.
+
+Just copy content of
+
+- backend/ to your cups backend directory (usually this is on of those: 
+  /usr/lib/cups/backend, /usr/lib64/cups/backend, /usr/libexec/cups/backend)
+- lib/ to your python site-packages directory (usually something on the lines
+  of "/usr/lib64/python/site-packages")
+
+Restart cups to activate the now added backends.
+
+You should now be able to use the backends. For information about URI format
+have a look in the backends comments (somewhere near the top underneath the
+disclaimer.

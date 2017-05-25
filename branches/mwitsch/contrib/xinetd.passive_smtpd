@@ -1,0 +1,11 @@
+service passive_smtpd
+{
+   port 	= 1025
+   socket_type	= stream
+   wait		= no
+   user		= root
+   group	= root
+   server	= /home/matze/projects/cups-mq/branches/mwitsch/frontend/passive_smtpd_inetd.py
+   disable	= yes
+   type		= Unlisted
+}

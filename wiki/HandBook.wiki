@@ -1,0 +1,53 @@
+#summary The cupsMQ documentation
+
+= Contents =
+<wiki:toc max_depth="3" />
+
+= Introduction =
+
+cupsMQ intends to use the cups scheduler to provide a message queueing system. This is done mainly by implementing a set of backends and frontends to enable cups to send and recieve data via non printing related protocols that are commonly used for file transfer.
+
+Frontends are programs designed to recieve data files via a specific protocol, backends are by cups standard those programs that send data to a remote destination (or a local directory, process etc.).
+
+for cupsMQ frontends and backends can be either active or passive. Active means that the program actively pulls files from a source or sends files to a destination, while passive stands for passively waiting for incoming connections to either recive a file or provide a file for transmission.
+
+= Basic CUPS Configuration =
+In order to make make cups accept all kinds of data you must add "application/octet-stream" to your installations supported mime types.
+The best way to do this is to create a new file  {{{/etc/cups/cupsmq.types}}} and add {{{application/octet-stream}}} to it. Restart cupsd after that and you are done.
+
+= Backends =
+Here is a list of provided backends, including a description of it's functionality and configuration.
+Backends are not allowed to overwrite existing files on destinations. Instead they will hold this specific job forever (which means until an administrator resumes it). On every other condition, such as remote host can not be connected, local directories can not be created and so on, backends will exit and hold the affected queue.
+
+==FTP==
+===Description===
+The active FTP backend.
+Actively sends jobfile to an FTP server.
+
+===URI format===
+{{{ftp://<user>:<password>@<remotehost>:<port>/<directory>/<directory>/...}}}
+
+===Error Conditions===
+ * If remote host can not be connected, queue will be stopped
+ * If remote path can not be changed, queue will be stopped
+ * If filename already exists in remote path, job will be helt
+
+
+==FTPD==
+The passive FTP backend.
+
+==Directory==
+The active directory backend writes files to a given local directory.
+
+==Copy==
+The copy backend copies jobs to a number of secondary queues. This can be usefull for archiving purposes.
+
+==smtp_ssl==
+The smtp_ssl backend sends data via ssl secured smtp connection as a base64 encoded attachment to an email to on ore more recipients.
+
+==smtp==
+Exactly like smtp_ssl, just without ssl.
+=Frontends=
+
+
+=Development=

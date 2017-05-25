@@ -1,0 +1,33 @@
+#!/bin/sh
+# Convert PostScript to PDF.
+
+# based on ghostscript ps2pdf script
+# Currently, we produce PDF 1.4 by default, but this is not guaranteed
+# not to change in the future.
+version=14
+
+# taken from original ghostscript script
+# determining program to call
+ps2pdf="`dirname \"$0\"`/ps2pdf$version"
+if test ! -x "$ps2pdf"; then
+	ps2pdf="ps2pdf$version"
+fi
+
+# how many args where given in call
+if test $# -eq 6
+then
+	# called with filename
+	infile=$6
+elif test $# -eq 5
+then
+	# called without filename, take data from stdin
+	infile="-"
+else
+	# not called with a valid number of arguments, give usage info
+	echo "usage: ps2pdf jobID user title copies print-options <optional: filename>"
+	exit 1
+fi
+
+# call pdfwriter script with options and infile
+# output goes always to stdout to be passed to backend
+exec "$ps2pdf" "$infile" "-"

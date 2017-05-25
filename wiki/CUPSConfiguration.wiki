@@ -1,0 +1,10 @@
+#summary Needed configurations for CUPS
+
+= Introduction =
+
+To have cupsmq working, you may need some special or not so special settings in cups. Here is an overvuew.
+
+
+= Details =
+
+Make shure you have enabled *application/octet-stream* in your */etc/cups/mime.types* file.

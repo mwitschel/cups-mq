@@ -1,0 +1,73 @@
+#summary Standard tools to use in cupsMQ related code
+
+= Contents =
+<wiki:toc max_depth="3" />
+
+= Introduction =
+
+It makes sense and is somewhat neccessary to define some standards for the work on a software project. Those standards and standard tools shall be defined here
+
+
+= Programming Language =
+
+As programming language we chose python. This is because we have the most experience with this language, it is portabel even to some non-OSS operating systems and it provides us with a lot of modules that can be reused for this project. The currently use version is 2.7.
+
+If however it seems fit or neccessary to use another language, its use is to be discussed thourougly.
+
+
+= Modules and libaries =
+
+*python modules*
+ * pycups - provides a very usable interface to cups
+ * pyftpdlib - is a very powerful ftp server implementation an can be customized in many ways.
+ * ftplib - is the standard python fpt client implementation
+ * ConfiParser - nice module to create, update and read config files with a nice format
+
+= Naming and location of files in trunk =
+
+==Cups Backends==
+Backends in cups care for the actual transfer of data from the Queue to the device. They handle one job at a time and are therefor started sequentially for each job as a new process. They also handle exceptions and give feedback to the scheduler via returncodes and backstream data.
+
+===Types of provided Backends===
+Providing backends for message queueing appears differently as providing printer backend. We have seen the need to provide two different types:
+ * active - backends that actively put files to remote queues or hosts via a specific protocol 
+ * passive - backends that provide access to one file via a specific protocol and must therefor implement a server for this protocol
+
+===Naming and Placement===
+Backends
+ * shall be put to trunk/backends
+ * shall be named type_protocol.py (f.e.: active_ftp.py for active ftp backend). This naming sheme is meant to keep an overview during development. Naming of backends in an actual release will most likely differ from that to keep cups standards, so the type part of the name will be stripped out.
+ * shall have a hint to passive function if they are passive. F.e. a passive ftp backend implements an ftp daemon, so it will be named passive_ftpd.py
+
+===General Behaviour===
+Backends handle the delivery of data files. Some things are crucial to make this reliable enough for message queueing.
+
+ * Backends shall not override exiting files with the same name. If file already exists, job is to be helt.
+ * Backends need to stop the complete queue on any connection errors or errors while creating output directories.
+ * Backends shall send detailed information about error conditions to cups scheduler using ERROR prefix. Error messages need at least to contain remote host on connection errors and target file paths on file creation errors.
+
+==CupsMQ Frontends==
+Frontends as such are not part of the cups architecture. For cupsMQ they take files via a specific protocol and place them in a Queue. They need to implement a server for the desired protocol and submit the recieved file to a queue imediately.
+
+In cupsMQ frontends need to provide native and compatibility mode for interaction with cups scheduler. Native mode means usage of pycups python cups api bindings, while compatibility mode uses subprocess.call() to call further executables in a shell and interprets output from those subprocesses to implement error handling.
+Most of this will be implemented transparently in CUPSFrontend Object.
+
+===Types of provided Frontends==
+Similiar to backends they can be:
+ * active - actively pull files from remote queues or servers
+ * passive - waiting for incoming connections, taking files submitted and place them in a queue.
+
+===Operation Modes===
+Frontends will need to have two modes of operation:
+ * native - interact with cups via pycups
+ * compatibility - interact with cups via its command line tools. This is ugly and provided for the only reason, that there are distros without pycups.
+Operation Mode selection will be implemented transparently in CUPSFrontend object but it pays to know about them.
+
+===Naming and Placement===
+Frontends
+ * shall be put to trunk/frontends
+ * shall be named cupsmq-protocol.py, while names of passive frontends include a hint to daemon funtionality (f.e. a passive ftp frontend would be named cupsmq-ftpd.py)
+
+==CupsMQ modules===
+ * shall be put to trunk/lib
+ * shall be helt to a small number
